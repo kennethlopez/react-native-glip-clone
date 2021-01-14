@@ -1,4 +1,4 @@
-import React, {useRef, useState} from "react";
+import React, {useRef} from "react";
 import {createStackNavigator} from "@react-navigation/stack";
 import {NavigationContainer} from "@react-navigation/native";
 import {Provider as PaperProvider, DefaultTheme} from 'react-native-paper';
@@ -9,6 +9,7 @@ import {StatusBar} from "react-native";
 import SplashScreen from "./screens/Splash";
 import DrawerStackScreen from "./screens/Drawer";
 import {UserProfileContextProp} from "./types";
+import {UserProfile} from "./api/types";
 
 const RootStack = createStackNavigator();
 
@@ -22,10 +23,15 @@ const theme = {
     }
 }
 
-export const UserProfileContext: React.Context<UserProfileContextProp> = React.createContext({});
+export const UserProfileContext = React.createContext<UserProfileContextProp>({
+    setUserProfile: (_) => {}
+});
 
 export default function App() {
-    const [userProfile, setUserProfile] = useState({});
+    const userProfile: React.MutableRefObject<UserProfile | null> = useRef(null);
+    const setUserProfile = (profile: UserProfile) => {
+        userProfile.current = profile;
+    }
 
     return (
         <PaperProvider theme={theme}>

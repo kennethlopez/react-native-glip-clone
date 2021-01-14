@@ -6,7 +6,7 @@ const keys = {
     user: storagePrefix.concat('user')
 }
 
-export const setUser = (user: User): Promise<void> => {
+export const setUser = (user: User | null): Promise<void> => {
     return AsyncStorage.setItem(keys.user, JSON.stringify(user));
 }
 

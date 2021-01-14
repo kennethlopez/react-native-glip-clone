@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {View} from "react-native";
 import {DrawerContentComponentProps, DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
 import {Avatar, Caption, Text, Title} from 'react-native-paper';
@@ -7,10 +7,16 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import styles from "./styles";
 import {Colors} from "../../styles";
 import {UserProfileContext} from "../../index";
+import {DrawerActions, useNavigation } from "@react-navigation/native";
+import BasicDialog from "../BasicDialog";
+import {Utils} from "../../utils";
 
 const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
+    const navigation = useNavigation();
+    const [visible, setVisible] = useState(false);
+
     const {userProfile} = useContext(UserProfileContext);
-    console.log("userProfile: ", userProfile);
+    const profile = userProfile?.current;
 
     return (
         <View style={styles.container}>
@@ -20,16 +26,16 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
                         <View style={styles.userDetailsContainer}>
                             <Avatar.Image
                                 source={{
-                                    uri: 'https://avatars0.githubusercontent.com/u/11627301?s=400&u=7172b05e75d2525e4b1045eedf9010abcd806060&v=4'
+                                    uri: profile?.avatarUrl
                                 }}
                                 size={60}
                             />
                             <View style={styles.userDetailsTitleContainer}>
-                                <Title style={styles.title}>Sam Paul</Title>
-                                <Caption style={styles.caption}>@sampaul</Caption>
+                                <Title style={styles.title}>{profile?.name}</Title>
+                                <Caption style={styles.caption}>@{profile?.emailOrPhone}</Caption>
 
                                 <View style={styles.statusContainer}>
-                                    <Caption style={styles.caption}>Offline</Caption>
+                                    <Caption style={styles.caption}>{profile?.presence.label}</Caption>
                                     <Ionicons
                                         name='ios-pencil-sharp'
                                         style={styles.statusIcon}
@@ -162,7 +168,20 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
                         )}
                         label="Sign out"
                         labelStyle={styles.drawerLabel}
-                        onPress={() => {}}
+                        onPress={() => {
+                            navigation.dispatch(DrawerActions.closeDrawer);
+                            setVisible(true);
+                        }}
+                    />
+
+                    <BasicDialog
+                        state={[visible, setVisible]}
+                        title='Sign out'
+                        message='Are you sure you want to sign out?'
+                        doneActionText='SIGN OUT'
+                        onDonePress={() => {
+                            Utils.signOut(navigation);
+                        }}
                     />
 
                 </View>

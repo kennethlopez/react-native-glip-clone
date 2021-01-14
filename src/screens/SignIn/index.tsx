@@ -7,7 +7,7 @@ import signInMachine from "../../machines/signIn";
 import SignInEmail from "../../components/SignInEmail";
 import SignInPassword from "../../components/SignInPassword";
 import {SubmitEventData} from "../../machines/signIn/types";
-import LocalStorage from "../../utils";
+import {LocalStorage} from "../../utils";
 import fakeApi from "../../api";
 import {UserProfileContext} from "../../index";
 
@@ -77,9 +77,7 @@ const SignInScreen: React.FC = () => {
                     fakeApi.getUserProfile(user)
                         .then((profile) => {
                             // saves the user profile into context, this will allow other screens to access the user profile
-                            if (setUserProfile) {
-                                setUserProfile(profile);
-                            }
+                            setUserProfile(profile);
 
                             navigation.reset({
                                 index: 0,

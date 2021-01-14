@@ -2,7 +2,7 @@ import React, {useContext, useEffect} from "react";
 import {StatusBar, View} from "react-native";
 import {AppStyle, Colors} from "../../styles";
 import {ActivityIndicator} from "react-native-paper";
-import LocalStorage from "../../utils";
+import {LocalStorage} from "../../utils";
 import { useNavigation } from "@react-navigation/native";
 import fakeApi from "../../api";
 import {UserProfileContext} from "../../index";
@@ -17,9 +17,7 @@ const SplashScreen: React.FC = () => {
                     fakeApi.getUserProfile(user)
                         .then((profile) => {
                             // saves the user profile into context, this will allow other screens to access the user profile
-                            if (setUserProfile) {
-                                setUserProfile(profile);
-                            }
+                            setUserProfile(profile);
 
                             navigation.reset({
                                 index: 0,

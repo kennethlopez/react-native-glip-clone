@@ -3,9 +3,9 @@ import {UserProfile} from "../api/types";
 import {DrawerParams} from "../screens/Drawer/types";
 
 export type UserProfileContextProp = {
-    userProfile?: UserProfile | {};
-    setUserProfile?: React.Dispatch<React.SetStateAction<UserProfile>>
-};
+    userProfile?: React.MutableRefObject<UserProfile | null>;
+    setUserProfile: (profile: UserProfile) => void;
+}
 
 export type RootStackParamList = {
     Drawer: DrawerParams
