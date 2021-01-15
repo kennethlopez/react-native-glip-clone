@@ -9,14 +9,19 @@ import {Colors} from "../../styles";
 import {UserProfileContext} from "../../index";
 import {DrawerActions, useNavigation } from "@react-navigation/native";
 import BasicDialog from "../BasicDialog";
-import {Utils} from "../../utils";
 
 const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
     const navigation = useNavigation();
-    const [visible, setVisible] = useState(false);
+    const [signOutDialogVisible, setSignOutDialogVisible] = useState(false);
 
     const {userProfile} = useContext(UserProfileContext);
     const profile = userProfile?.current;
+
+    const hideSignOutDialog = () => setSignOutDialogVisible(false);
+    const showSignOutDialog = () => {
+        navigation.dispatch(DrawerActions.closeDrawer);
+        setSignOutDialogVisible(true);
+    }
 
     return (
         <View style={styles.container}>
@@ -168,19 +173,19 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
                         )}
                         label="Sign out"
                         labelStyle={styles.drawerLabel}
-                        onPress={() => {
-                            navigation.dispatch(DrawerActions.closeDrawer);
-                            setVisible(true);
-                        }}
+                        onPress={showSignOutDialog}
                     />
 
                     <BasicDialog
-                        state={[visible, setVisible]}
+                        visible={signOutDialogVisible}
                         title='Sign out'
                         message='Are you sure you want to sign out?'
-                        doneActionText='SIGN OUT'
-                        onDonePress={() => {
-                            Utils.signOut(navigation);
+                        onDismiss={hideSignOutDialog}
+                        negativeButtonText='CANCEL'
+                        positiveButtonText='SIGN OUT'
+                        onNegativeButtonPress={hideSignOutDialog}
+                        onPositiveButtonPress={() => {
+                            hideSignOutDialog();
                         }}
                     />
 

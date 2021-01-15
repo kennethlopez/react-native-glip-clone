@@ -72,7 +72,7 @@ const SignInScreen: React.FC = () => {
         if (signInSuccess) {
             const user = signInState.context.user;
 
-            if (user != null) {
+            if (user) {
                 LocalStorage.setUser(user).then(() => {
                     fakeApi.getUserProfile(user)
                         .then((profile) => {

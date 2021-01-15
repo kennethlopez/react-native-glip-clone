@@ -1,35 +1,41 @@
 import {StyleSheet, View} from "react-native";
 import React from "react";
 import {Button, Dialog, Paragraph, Portal} from "react-native-paper";
-import {Colors} from "../../styles";
+import {AppStyle, Colors} from "../../styles";
 
 type Props = {
-    state: [boolean, (visible: boolean) => void],
+    visible: boolean;
     title: string;
     message: string;
-    doneActionText: string;
-    onDonePress: () => void;
+    onDismiss: () => void;
+    negativeButtonText?: string;
+    positiveButtonText?: string;
+    onNegativeButtonPress?: () => void;
+    onPositiveButtonPress?: () => void;
 }
 
-const BasicDialog: React.FC<Props> = ({state, title, message, doneActionText, onDonePress}) => {
-    const [visible, setVisible] = state;
-
-    const hideDialog = () => setVisible(false);
+const BasicDialog: React.FC<Props> = ({
+        visible,
+        title,
+        message,
+        onDismiss,
+        negativeButtonText,
+        positiveButtonText,
+        onNegativeButtonPress,
+        onPositiveButtonPress,
+    }) => {
 
     return (
         <View>
             <Portal>
-                <Dialog visible={visible} onDismiss={hideDialog}>
+                <Dialog visible={visible} onDismiss={onDismiss}>
                     <Dialog.Title style={styles.title}>{title}</Dialog.Title>
                     <Dialog.Content>
                         <Paragraph>{message}</Paragraph>
                     </Dialog.Content>
                     <Dialog.Actions>
-                        <Button onPress={hideDialog}>Cancel</Button>
-                        <Button onPress={() => {
-                            onDonePress();
-                            hideDialog();
-                        }}>{doneActionText}</Button>
+                        {negativeButtonText && <Button labelStyle={AppStyle.buttonLabel} onPress={onNegativeButtonPress}>{negativeButtonText}</Button>}
+                        {positiveButtonText && <Button labelStyle={AppStyle.buttonLabel} onPress={onPositiveButtonPress}>{positiveButtonText}</Button>}
                     </Dialog.Actions>
                 </Dialog>
             </Portal>
