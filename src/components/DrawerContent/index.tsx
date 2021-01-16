@@ -9,19 +9,47 @@ import {Colors} from "../../styles";
 import {UserProfileContext} from "../../index";
 import {DrawerActions, useNavigation } from "@react-navigation/native";
 import BasicDialog from "../BasicDialog";
+import signOutMachine from "../../machines/signOut";
+import {useMachine} from "@xstate/react";
+import LoadingDialog from "../LoadingDialog";
 
 const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
-    const navigation = useNavigation();
-    const [signOutDialogVisible, setSignOutDialogVisible] = useState(false);
-
     const {userProfile} = useContext(UserProfileContext);
     const profile = userProfile?.current;
 
+    const navigation = useNavigation();
+    const [signOutDialogVisible, setSignOutDialogVisible] = useState(false);
     const hideSignOutDialog = () => setSignOutDialogVisible(false);
     const showSignOutDialog = () => {
         navigation.dispatch(DrawerActions.closeDrawer);
         setSignOutDialogVisible(true);
+
+        // lets the error dialog display again after being closed
+        setErrorDialogVisible(true);
     }
+
+    const [signOutState, signOutSend] = useMachine(signOutMachine);
+    const errorTitle = signOutState.context.errorMessage ? signOutState.context.errorMessage.title : '';
+    const errorMessage = signOutState.context.errorMessage ? signOutState.context.errorMessage.message : '';
+    const signOutLoading = signOutState.matches({
+        signedIn: {
+            fetcher: 'loading'
+        }
+    });
+    const hasError = !signOutState.matches({
+        signedIn: {
+            error: 'none'
+        }
+    })
+    const sendSignOutEvent = () => {
+        signOutSend('SIGN_OUT');
+    }
+
+    const [errorDialogVisible, setErrorDialogVisible] = useState(true);
+    const hideErrorDialog = () => setErrorDialogVisible(false);
+
+    console.log("state: ", signOutState.value);
+    console.log("context: ", signOutState.context);
 
     return (
         <View style={styles.container}>
@@ -185,9 +213,26 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
                         positiveButtonText='SIGN OUT'
                         onNegativeButtonPress={hideSignOutDialog}
                         onPositiveButtonPress={() => {
+                            sendSignOutEvent();
                             hideSignOutDialog();
                         }}
                     />
+
+                    {signOutLoading && <LoadingDialog visible={signOutLoading} />}
+
+                    {
+                        !signOutDialogVisible &&
+                        !signOutLoading &&
+                        hasError &&
+                        <BasicDialog
+                            visible={errorDialogVisible}
+                            title={errorTitle}
+                            message={errorMessage}
+                            positiveButtonText='OK'
+                            onDismiss={hideErrorDialog}
+                            onPositiveButtonPress={hideErrorDialog}
+                        />
+                    }
 
                 </View>
             </DrawerContentScrollView>

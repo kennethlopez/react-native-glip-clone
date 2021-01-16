@@ -40,14 +40,14 @@ export type AuthPasswordErrorStates = {
     }
 }
 
-export type AuthEmail = {
+type AuthEmail = {
     states: {
         fetch: AuthEmailStates,
         error: AuthEmailErrorStates
     }
 }
 
-export type AuthPassword = {
+type AuthPassword = {
     states: {
         fetch: AuthPasswordStates,
         error: AuthPasswordErrorStates

@@ -1,4 +1,4 @@
-import {AuthResponse, User, UserPresence, UserProfile} from "./types";
+import {AuthResponse, SignOutResponse, User, UserPresence, UserProfile} from "./types";
 
 // noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols
 export const authEmail = (emailOrPhone: string): Promise<AuthResponse> => {
@@ -18,6 +18,7 @@ export const authEmail = (emailOrPhone: string): Promise<AuthResponse> => {
         }, 1000);
     });
 }
+
 
 // noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols
 export const failAuthEmail = (email: string): Promise<AuthResponse> => {
@@ -91,6 +92,36 @@ export const getUserProfile = (user: User): Promise<UserProfile> => {
            };
 
            resolve(userProfile);
+       }, 1000);
+    });
+}
+
+// noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols
+export const signOut = (): Promise<SignOutResponse> => {
+    return new Promise<SignOutResponse>(resolve => {
+       setTimeout(() => {
+           const response: SignOutResponse = {
+               status: {
+                   success: true
+               }
+           }
+
+           resolve(response);
+       }, 1000);
+    });
+}
+
+// noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols
+export const failSignOut = (): Promise<SignOutResponse> => {
+    return new Promise<SignOutResponse>((_, reject) => {
+       setTimeout(() => {
+           const response: SignOutResponse = {
+               status: {
+                   success: false
+               }
+           }
+
+           reject(response);
        }, 1000);
     });
 }

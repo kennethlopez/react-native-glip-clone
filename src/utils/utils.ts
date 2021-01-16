@@ -1,11 +1,16 @@
-import {LocalStorage} from ".";
+import * as NetInfo from '@react-native-community/netinfo'
+import {NetInfoState} from "@react-native-community/netinfo";
 
-export const signOut = (navigation: any) => {
-    LocalStorage.setUser(null)
-        .then(() => {
-            navigation.navigate('Home');
-        })
-        .catch(e => {
-            console.log('problem signing out: ', e);
-        });
+export const checkConnectivity = (): Promise<NetInfoState> => {
+    return new Promise<NetInfoState>((resolve, reject) => {
+        NetInfo.fetch()
+            .then((netInfoState) => {
+                if (netInfoState) {
+                    resolve(netInfoState)
+                    // reject(netInfoState);
+                } else {
+                    reject(netInfoState);
+                }
+            });
+    });
 }

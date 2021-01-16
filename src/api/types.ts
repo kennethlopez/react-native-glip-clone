@@ -26,3 +26,14 @@ export type UserProfile = {
     avatarUrl: string;
     presence: UserPresence;
 }
+
+export type ErrorMessage = {
+    title: string;
+    message: string;
+}
+
+export type SignOutResponse = {
+    status: {
+        success: boolean;
+    }
+}
