@@ -11,27 +11,40 @@ const SignOutFetcherConfig: SignOutFetcherStates = {
             }
         },
         loading: {
-            invoke: [
-                {
-                    id: 'checkConnectivityService',
-                    src: 'checkConnectivity',
-                    onDone: {
-                        actions: 'setNetInfoState'
-                    },
-                    onError: {
-                        target: ['idle', '#signOutError.noInternet'],
-                    },
-                },
-                {
-                    id: 'signOutService',
-                    src: 'signOut',
-                    onDone: '#signOutSuccess',
-                    onError: {
-                        target: ['idle', '#signOutError.fail'],
-                        cond: 'signOutFail'
+            id: 'signOutLoading',
+            initial: 'checkConnectivity',
+            states: {
+                checkConnectivity: {
+                    invoke: {
+                        src: 'checkConnectivity',
+                        onDone: {
+                            target: 'serverSignOut',
+                            actions: 'setNetInfoState'
+                        },
+                        onError: {
+                            target: ['#signOutFetcher.idle', '#signOutError.noInternet'],
+                        },
                     }
-                }
-            ]
+                },
+                serverSignOut: {
+                    invoke: {
+                        src: 'serVerSignOut',
+                        onDone: 'localSignOut',
+                        onError: {
+                            target: ['#signOutFetcher.idle', '#signOutError.fail'],
+                        }
+                    }
+                },
+                localSignOut: {
+                    invoke: {
+                        src: 'localSignOut',
+                        onDone: '#signOutSuccess',
+                        onError: {
+                            target: ['#signOutFetcher.idle', '#signOutError.fail'],
+                        }
+                    }
+                },
+            }
         }
     }
 }
@@ -57,7 +70,7 @@ const config: MachineConfig<SignOutContext, SignOutStateSchema, SignOutEvent> = 
     initial: 'signedIn',
     context: {
         errorMessage: null,
-        netInfoState: null
+         netInfoState: null
     },
     states: {
         signedIn: {

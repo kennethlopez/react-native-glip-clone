@@ -4,7 +4,7 @@ import {DrawerParams} from "../screens/Drawer/types";
 
 export type UserProfileContextProp = {
     userProfile?: React.MutableRefObject<UserProfile | null>;
-    setUserProfile: (profile: UserProfile) => void;
+    setUserProfile: (profile: UserProfile | null) => void;
 }
 
 export type RootStackParamList = {

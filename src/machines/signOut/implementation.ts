@@ -2,7 +2,7 @@ import {assign, MachineOptions} from "xstate";
 import {SignOutContext, SignOutEvent} from "./types";
 import {ErrorMessage, SignOutResponse} from "../../api/types";
 import fakeApi from "../../api";
-import {Utils} from "../../utils";
+import {LocalStorage, Utils} from "../../utils";
 import {NetInfoState} from "@react-native-community/netinfo";
 
 const makeErrorMessage = (title: string, message: string): ErrorMessage => {
@@ -34,8 +34,9 @@ const implementation: MachineOptions<SignOutContext, any> = {
         }),
     },
     services: {
-        signOut: (_) => fakeApi.failSignOut(),
         checkConnectivity: (_) => Utils.checkConnectivity(),
+        serVerSignOut: (_) => fakeApi.signOut(),
+        localSignOut: (_) => LocalStorage.setUser(null),
     },
     guards: {
         signOutFail: (_, event: SignOutEvent<SignOutResponse>) => !event.data.status.success

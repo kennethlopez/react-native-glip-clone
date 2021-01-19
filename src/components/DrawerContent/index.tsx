@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {View} from "react-native";
 import {DrawerContentComponentProps, DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
 import {Avatar, Caption, Text, Title} from 'react-native-paper';
@@ -14,7 +14,7 @@ import {useMachine} from "@xstate/react";
 import LoadingDialog from "../LoadingDialog";
 
 const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
-    const {userProfile} = useContext(UserProfileContext);
+    const {userProfile, setUserProfile} = useContext(UserProfileContext);
     const profile = userProfile?.current;
 
     const navigation = useNavigation();
@@ -36,9 +36,13 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
             fetcher: 'loading'
         }
     });
-    const hasError = !signOutState.matches({
+    const hasError = signOutState.matches({
         signedIn: {
-            error: 'none'
+            error: 'noInternet'
+        }
+    }) || signOutState.matches({
+        signedIn: {
+            error: 'fail'
         }
     })
     const sendSignOutEvent = () => {
@@ -48,8 +52,17 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
     const [errorDialogVisible, setErrorDialogVisible] = useState(true);
     const hideErrorDialog = () => setErrorDialogVisible(false);
 
-    console.log("state: ", signOutState.value);
-    console.log("context: ", signOutState.context);
+    const signOutSuccess = signOutState.matches('success');
+    useEffect(() => {
+        if (signOutSuccess) {
+            setUserProfile(null);
+
+            navigation.reset({
+                index: 0,
+                routes: [{name: 'Home'}]
+            });
+        }
+    }, [signOutSuccess]);
 
     return (
         <View style={styles.container}>

@@ -29,7 +29,7 @@ export const UserProfileContext = React.createContext<UserProfileContextProp>({
 
 export default function App() {
     const userProfile: React.MutableRefObject<UserProfile | null> = useRef(null);
-    const setUserProfile = (profile: UserProfile) => {
+    const setUserProfile = (profile: UserProfile | null) => {
         userProfile.current = profile;
     }
 
