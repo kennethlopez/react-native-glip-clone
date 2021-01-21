@@ -63,10 +63,6 @@ const SignInScreen: React.FC = () => {
     });
 
     const signInSuccess = signInState.matches('success');
-
-    console.log("state: ", signInState.value);
-    console.log("context: ", signInState.context);
-
     const {setUserProfile} = useContext(UserProfileContext);
     useEffect(() => {
         if (signInSuccess) {

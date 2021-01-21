@@ -24,4 +24,15 @@ const AppStyle =  StyleSheet.create({
     }
 });
 
-export {Colors, AppStyle, Mixins};
+const TabStyle = {
+    tabBarOptions: {
+        activeTintColor: Colors.PRIMARY,
+        inactiveTintColor: Colors.GRAY_DARK,
+        labelStyle: {
+            fontSize: 12
+        }
+    }
+}
+
+
+export {Colors, AppStyle, Mixins, TabStyle};
