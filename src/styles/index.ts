@@ -2,6 +2,7 @@ import * as Colors from './colors';
 import * as Mixins from './mixins';
 
 import {StyleSheet} from "react-native";
+import {DefaultTheme} from "react-native-paper";
 
 const AppStyle =  StyleSheet.create({
     container: {
@@ -30,9 +31,20 @@ const TabStyle = {
         inactiveTintColor: Colors.GRAY_DARK,
         labelStyle: {
             fontSize: 12
-        }
+        },
+        keyboardHidesTabBar: true,
+    }
+}
+
+const AppTheme = {
+    ...DefaultTheme,
+    roundness: 2,
+    colors: {
+        ...DefaultTheme.colors,
+        primary: Colors.PRIMARY,
+        accent: Colors.SECONDARY
     }
 }
 
 
-export {Colors, AppStyle, Mixins, TabStyle};
+export {Colors, AppStyle, Mixins, TabStyle, AppTheme};

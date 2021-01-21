@@ -1,8 +1,8 @@
 import React, {useRef} from "react";
 import {createStackNavigator} from "@react-navigation/stack";
 import {NavigationContainer} from "@react-navigation/native";
-import {Provider as PaperProvider, DefaultTheme} from 'react-native-paper';
-import {Colors} from "./styles";
+import {Provider as PaperProvider} from 'react-native-paper';
+import {Colors, AppTheme} from "./styles";
 import HomeScreen from "./screens/Home";
 import SignInScreen from "./screens/SignIn";
 import {StatusBar} from "react-native";
@@ -12,16 +12,6 @@ import {UserProfileContextProp} from "./types";
 import {UserProfile} from "./api/types";
 
 const RootStack = createStackNavigator();
-
-const theme = {
-    ...DefaultTheme,
-    roundness: 2,
-    colors: {
-        ...DefaultTheme.colors,
-        primary: Colors.PRIMARY,
-        accent: Colors.SECONDARY
-    }
-}
 
 export const UserProfileContext = React.createContext<UserProfileContextProp>({
     setUserProfile: (_) => {}
@@ -34,7 +24,7 @@ export default function App() {
     }
 
     return (
-        <PaperProvider theme={theme}>
+        <PaperProvider theme={AppTheme}>
             <UserProfileContext.Provider value={{userProfile, setUserProfile}}>
                 <NavigationContainer>
                     <StatusBar backgroundColor={Colors.GRAY_LIGHTER} barStyle='dark-content' />
