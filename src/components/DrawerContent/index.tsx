@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {View} from "react-native";
+import {StatusBar, View} from "react-native";
 import {DrawerContentComponentProps, DrawerContentScrollView, DrawerItem} from "@react-navigation/drawer";
 import {Avatar, Caption, Text, Title} from 'react-native-paper';
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -217,6 +217,10 @@ const DrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
                         onPress={showSignOutDialog}
                     />
 
+                    {
+                        (signOutDialogVisible || signOutLoading || (hasError && errorDialogVisible)) &&
+                        <StatusBar backgroundColor={Colors.BLACK_TRANSPARENT} barStyle='light-content'/>
+                    }
                     <BasicDialog
                         visible={signOutDialogVisible}
                         title='Sign out'
